@@ -19,21 +19,21 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-fonts:
-  - family: Mukta
-    fonts:
-      - asset: resources/assets/fonts/Mukta-Bold.ttf
-      - asset: resources/assets/fonts/Mukta-ExtraBold.ttf
-      - asset: resources/assets/fonts/Mukta-Light.ttf
-      - asset: resources/assets/fonts/Mukta-Medium.ttf
-      - asset: resources/assets/fonts/Mukta-Regular.ttf
-  - family: LobsterTwo
-    fonts:
-      - asset: resources/assets/fonts/LobsterTwo-Bold.ttf
-      - asset: resources/assets/fonts/LobsterTwo-BoldItalic.ttf
-      - asset: resources/assets/fonts/LobsterTwo-Italic.ttf
-      - asset: resources/assets/fonts/LobsterTwo-Regular.ttf
+  fonts:
+    - family: Mukta
+      fonts:
+        - asset: resources/assets/fonts/Mukta-Bold.ttf
+        - asset: resources/assets/fonts/Mukta-ExtraBold.ttf
+        - asset: resources/assets/fonts/Mukta-Light.ttf
+        - asset: resources/assets/fonts/Mukta-Medium.ttf
+        - asset: resources/assets/fonts/Mukta-Regular.ttf
+    - family: LobsterTwo
+      fonts:
+        - asset: resources/assets/fonts/LobsterTwo-Bold.ttf
+        - asset: resources/assets/fonts/LobsterTwo-BoldItalic.ttf
+        - asset: resources/assets/fonts/LobsterTwo-Italic.ttf
+        - asset: resources/assets/fonts/LobsterTwo-Regular.ttf
 
-assets:
-  - resources/icons/
-  - resources/assets/splash.riv
+  assets:
+    - resources/icons/
+    - resources/assets/splash.riv
