@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:glide_file_demo/view/received_widget.dart';
 
 import '../styles/colors.dart';
 
@@ -36,7 +37,11 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
       if (progress >= 1.0) {
         timer.cancel();
         setState(() {
-
+          if (!context.mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ReceivedWidget()),
+          );
         });
       }
     });
