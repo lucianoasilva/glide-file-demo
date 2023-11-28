@@ -21,10 +21,6 @@ class _SelectionWidgetState extends State<SelectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double verticalSwipeMaxWidthThreshold = 50.0;
-    double verticalSwipeMinDisplacement = 100.0;
-    double horizontalSwipeMinDisplacement = 50.0;
-    double horizontalSwipeMaxHeightThreshold = 100.0;
 
     return GestureDetector(
       child: Material(
