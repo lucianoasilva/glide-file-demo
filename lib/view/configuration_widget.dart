@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glide_file_demo/view/calibration_widget.dart';
 
 import '../styles/colors.dart';
 
@@ -300,7 +301,11 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                       fontSize: 18,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CalibrationWidget())
+                    );
+                  },
                 )
                     : Container()
               ],
