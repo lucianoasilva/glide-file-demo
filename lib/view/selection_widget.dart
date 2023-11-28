@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glide_file_demo/view/sending_widget.dart';
 
 import '../styles/colors.dart';
 
@@ -10,7 +11,6 @@ class SelectionWidget extends StatefulWidget {
 }
 
 class _SelectionWidgetState extends State<SelectionWidget> {
-
   //Vertical drag details
   DragStartDetails? startVerticalDragDetails;
   DragUpdateDetails? updateVerticalDragDetails;
@@ -21,7 +21,6 @@ class _SelectionWidgetState extends State<SelectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       child: Material(
         color: secondaryColor,
@@ -29,16 +28,16 @@ class _SelectionWidgetState extends State<SelectionWidget> {
           children: <Widget>[
             const Expanded(
                 child: Align(
-                  child: Text(
-                    "¡Deslizá!",
-                    style: TextStyle(
-                      fontFamily: 'Mukta',
-                      fontWeight: FontWeight.bold,
-                      color: fontColor1,
-                      fontSize: 30,
-                    ),
-                  ),
-                )),
+              child: Text(
+                "¡Deslizá!",
+                style: TextStyle(
+                  fontFamily: 'Mukta',
+                  fontWeight: FontWeight.bold,
+                  color: fontColor1,
+                  fontSize: 30,
+                ),
+              ),
+            )),
             SizedBox(
                 width: 400,
                 height: 400,
@@ -106,7 +105,10 @@ class _SelectionWidgetState extends State<SelectionWidget> {
       onVerticalDragEnd: (endDetails) {
         if (updateVerticalDragDetails != null &&
             startVerticalDragDetails != null) {
-          print("SELECTION WIDGET :::: onVerticalDragEnd");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SendingWidget()),
+          );
         } else {
           print("SELECTION WIDGET :::: update/start vertical null");
         }
@@ -120,7 +122,10 @@ class _SelectionWidgetState extends State<SelectionWidget> {
       onHorizontalDragEnd: (endDetails) {
         if (updateHorizontalDragDetails != null &&
             startHorizontalDragDetails != null) {
-          print("SELECTION WIDGET :::: onHorizontalDragEnd");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SendingWidget()),
+          );
         } else {
           print("SELECTION WIDGET :::: update/start horizontal null");
         }
