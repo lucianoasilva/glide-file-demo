@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glide_file_demo/view/receiving_widget.dart';
+import 'package:glide_file_demo/view/selection_widget.dart';
 
 import '../styles/colors.dart';
 
@@ -48,7 +50,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                         padding: const EdgeInsets.all(2.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6.0),
-                          color: primaryColor, // Puedes cambiar el color del rectángulo según tus preferencias
+                          color:
+                              primaryColor, // Puedes cambiar el color del rectángulo según tus preferencias
                         ),
                         child: const Text(
                           'Front Demo',
@@ -79,7 +82,12 @@ class _HomeHeaderState extends State<HomeHeader> {
                         iconSize: 80,
                         icon: Image.asset('resources/icons/enviar.png',
                             color: secondaryColor),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SelectionWidget()));
+                        },
                       ),
                     ),
                   ),
@@ -118,7 +126,12 @@ class _HomeHeaderState extends State<HomeHeader> {
                         iconSize: 80,
                         icon: Image.asset('resources/icons/recibir.png',
                             color: primaryColor),
-                        onPressed: () async {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ReceivingWidget()));
+                        },
                       ),
                     ),
                   ),
