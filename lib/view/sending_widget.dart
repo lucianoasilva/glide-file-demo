@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glide_file_demo/view/sent_widget.dart';
 
 import '../styles/colors.dart';
 
@@ -10,9 +11,7 @@ class SendingWidget extends StatefulWidget {
 }
 
 class _SendingWidgetState extends State<SendingWidget> {
-
   String currentState = "initState";
-
 
   @override
   void initState() {
@@ -35,7 +34,9 @@ class _SendingWidgetState extends State<SendingWidget> {
     currentState = "Enviando...";
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        currentState = "ENVIADO!";
+        if (!context.mounted) return;
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const SentWidget()));
       });
     });
   }
