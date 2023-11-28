@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glide_file_demo/view/configuration_widget.dart';
 
 import '../styles/colors.dart';
 import '../widgets/home_header.dart';
@@ -22,7 +23,11 @@ class _HomePageState extends State<HomePage> {
             elevation: 0.0,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ConfigurationWidget())
+                  );
+                },
                 icon: const Icon(
                   Icons.settings,
                   color: fontColor1,
