@@ -1,23 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../controller/calibration_controller.dart';
+import '../data/stored_data.dart';
+import '../data/calibration.dart';
 import '../styles/colors.dart';
 
 class CalibrationWidget extends StatefulWidget {
-  const CalibrationWidget({super.key});
+  const CalibrationWidget({super.key, required this.storedData});
+
+  final StoredData storedData;
 
   @override
   State<CalibrationWidget> createState() => _CalibrationWidgetState();
 }
 
 class _CalibrationWidgetState extends State<CalibrationWidget> {
-
   final TextEditingController controllerBPosX = TextEditingController();
   final TextEditingController controllerBPosY = TextEditingController();
   final TextEditingController controllerIPosX = TextEditingController();
   final TextEditingController controllerIPosY = TextEditingController();
   final TextEditingController controllerMPosX = TextEditingController();
   final TextEditingController controllerMPosY = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTextFieldValues();
+  }
+
+  _updateTextFieldValues() {
+    setState(() {
+      controllerBPosX.text = widget.storedData.blueberryPosition[0].toString();
+      controllerBPosY.text = widget.storedData.blueberryPosition[1].toString();
+      controllerIPosX.text = widget.storedData.icePosition[0].toString();
+      controllerIPosY.text = widget.storedData.icePosition[1].toString();
+      controllerMPosX.text = widget.storedData.mintPosition[0].toString();
+      controllerMPosY.text = widget.storedData.mintPosition[1].toString();
+    });
+  }
+
+  Future<void> _saveCalibration() async {
+    final Calibration calibration = Calibration(
+        widget.storedData.blueberryPosition[0],
+        widget.storedData.blueberryPosition[1],
+        widget.storedData.icePosition[0],
+        widget.storedData.icePosition[1],
+        widget.storedData.mintPosition[0],
+        widget.storedData.mintPosition[1]);
+    try {
+      await CalibrationController.saveCalibration(calibration);
+    } catch (e) {
+      print("CALIBRATION WIDGET :::: exception: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +161,13 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                                       RegExp(r'^\d{0,1}([.,]\d{0,2})?'),
                                     ),
                                   ],
-                                  onSubmitted: (String value) {},
+                                  onSubmitted: (String value) {
+                                    setState(() {
+                                      widget.storedData.blueberryPosition[0] = (
+                                          double.tryParse(
+                                              value.replaceAll(',', '.'))!);
+                                    });
+                                  },
                                   textAlign: TextAlign.start,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: const TextStyle(
@@ -182,7 +224,13 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                                       RegExp(r'^\d{0,1}([.,]\d{0,2})?'),
                                     ),
                                   ],
-                                  onSubmitted: (String value) {},
+                                  onSubmitted: (String value) {
+                                    setState(() {
+                                      widget.storedData.icePosition[0] = (
+                                          double.tryParse(
+                                              value.replaceAll(',', '.'))!);
+                                    });
+                                  },
                                   textAlign: TextAlign.start,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: const TextStyle(
@@ -239,7 +287,13 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                                       RegExp(r'^\d{0,1}([.,]\d{0,2})?'),
                                     ),
                                   ],
-                                  onSubmitted: (String value) {},
+                                  onSubmitted: (String value) {
+                                    setState(() {
+                                      widget.storedData.mintPosition[0] = (
+                                          double.tryParse(
+                                              value.replaceAll(',', '.'))!);
+                                    });
+                                  },
                                   textAlign: TextAlign.start,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: const TextStyle(
@@ -300,7 +354,13 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                                       RegExp(r'^\d{0,1}([.,]\d{0,2})?'),
                                     ),
                                   ],
-                                  onSubmitted: (String value) {},
+                                  onSubmitted: (String value) {
+                                    setState(() {
+                                      widget.storedData.blueberryPosition[1] = (
+                                          double.tryParse(
+                                              value.replaceAll(',', '.'))!);
+                                    });
+                                  },
                                   textAlign: TextAlign.start,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: const TextStyle(
@@ -357,7 +417,13 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                                       RegExp(r'^\d{0,1}([.,]\d{0,2})?'),
                                     ),
                                   ],
-                                  onSubmitted: (String value) {},
+                                  onSubmitted: (String value) {
+                                    setState(() {
+                                      widget.storedData.icePosition[1] = (
+                                          double.tryParse(
+                                              value.replaceAll(',', '.'))!);
+                                    });
+                                  },
                                   textAlign: TextAlign.start,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: const TextStyle(
@@ -414,7 +480,13 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                                       RegExp(r'^\d{0,1}([.,]\d{0,2})?'),
                                     ),
                                   ],
-                                  onSubmitted: (String value) {},
+                                  onSubmitted: (String value) {
+                                    setState(() {
+                                      widget.storedData.mintPosition[1] = (
+                                          double.tryParse(
+                                              value.replaceAll(',', '.'))!);
+                                    });
+                                  },
                                   textAlign: TextAlign.start,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: const TextStyle(
@@ -498,7 +570,10 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(20),
                       ))),
-              onPressed: () {},
+              onPressed: () {
+                _saveCalibration();
+                Navigator.pop(context);
+              },
               child: const Text(
                 "Guardar ajustes",
                 style: TextStyle(
