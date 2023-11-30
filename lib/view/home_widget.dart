@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/configuration_widget.dart';
 
+import '../data/stored_data.dart';
+import '../view/configuration_widget.dart';
 import '../styles/colors.dart';
 import '../widgets/home_header.dart';
 
@@ -12,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  StoredData storedData = StoredData();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +27,11 @@ class _HomePageState extends State<HomePage> {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ConfigurationWidget())
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ConfigurationWidget(storedData: storedData)));
                 },
                 icon: const Icon(
                   Icons.settings,

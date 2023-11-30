@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/calibration_widget.dart';
 
+import '../data/stored_data.dart';
+import '../view/calibration_widget.dart';
 import '../styles/colors.dart';
 
 class ConfigurationWidget extends StatefulWidget {
-  const ConfigurationWidget({super.key});
+  const ConfigurationWidget({super.key, required this.storedData});
+
+  final StoredData storedData;
 
   @override
   State<ConfigurationWidget> createState() => _ConfigurationWidgetState();
 }
 
 class _ConfigurationWidgetState extends State<ConfigurationWidget> {
-
   bool bluetoothSwitch = false;
   bool locationSwitch = false;
   bool notificationSwitch = true;
@@ -230,8 +232,8 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                   elevation: 0,
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ))),
+                    Radius.circular(20),
+                  ))),
               onPressed: null,
               child: const Text(
                 '(no disponible)',
@@ -284,29 +286,31 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                 ),
                 (!calibrationSwitch)
                     ? ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(80, 40),
-                      backgroundColor: primaryColor,
-                      elevation: 0,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ))),
-                  child: const Text(
-                    "Configurar",
-                    style: TextStyle(
-                      fontFamily: 'Mukta',
-                      color: fontColor1,
-                      fontWeight: FontWeight.w100,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CalibrationWidget())
-                    );
-                  },
-                )
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(80, 40),
+                            backgroundColor: primaryColor,
+                            elevation: 0,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ))),
+                        child: const Text(
+                          "Configurar",
+                          style: TextStyle(
+                            fontFamily: 'Mukta',
+                            color: fontColor1,
+                            fontWeight: FontWeight.w100,
+                            fontSize: 18,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CalibrationWidget(
+                                      storedData: widget.storedData)));
+                        },
+                      )
                     : Container()
               ],
             ),
