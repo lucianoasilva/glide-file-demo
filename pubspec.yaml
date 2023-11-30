@@ -7,9 +7,11 @@ environment:
   sdk: '>=3.1.0-54.0.dev <4.0.0'
 
 dependencies:
+  get:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  flutter_beacon: ^0.5.1
 
 dev_dependencies:
   flutter_test:
