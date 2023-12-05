@@ -1,7 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/receiving_widget.dart';
-import 'package:glide_file_demo/view/selection_widget.dart';
+import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_beacon/flutter_beacon.dart';
+import 'package:get/get.dart';
+
+import '../controller/requirement_state_controller.dart';
+import '../view/receiving_widget.dart';
+import '../view/selection_widget.dart';
 import '../styles/colors.dart';
 
 class HomeHeader extends StatefulWidget {
@@ -12,6 +18,68 @@ class HomeHeader extends StatefulWidget {
 }
 
 class _HomeHeaderState extends State<HomeHeader> {
+  final controller = Get.find<RequirementStateController>();
+  StreamSubscription<BluetoothState>? _streamBluetooth;
+
+  late PlatformFile pickedFile;
+
+  @override
+  void initState() {
+    super.initState();
+    listeningBluetoothState();
+  }
+
+  listeningBluetoothState() async {
+    print('HOME HEADER WIDGET :::: Listening to bluetooth state');
+    _streamBluetooth = flutterBeacon
+        .bluetoothStateChanged()
+        .listen((BluetoothState state) async {
+      controller.updateBluetoothState(state);
+    });
+    await flutterBeacon.requestAuthorization;
+  }
+
+  Future<bool> checkAllRequirements() async {
+    final bluetoothState = await flutterBeacon.bluetoothState;
+    controller.updateBluetoothState(bluetoothState);
+    print('HOME HEADER WIDGET :::: BLUETOOTH $bluetoothState');
+
+    final authorizationStatus = await flutterBeacon.authorizationStatus;
+    controller.updateAuthorizationStatus(authorizationStatus);
+    print('HOME HEADER WIDGET :::: AUTHORIZATION $authorizationStatus');
+
+    final locationServiceEnabled =
+        await flutterBeacon.checkLocationServicesIfEnabled;
+    controller.updateLocationService(locationServiceEnabled);
+    print('HOME HEADER WIDGET :::: LOCATION SERVICE $locationServiceEnabled');
+
+    if (controller.bluetoothEnabled &&
+        controller.authorizationStatusOk &&
+        controller.locationServiceEnabled) {
+      print('HOME HEADER WIDGET :::: STATE READY');
+      return Future.value(true);
+    } else {
+      print('HOME HEADER WIDGET :::: STATE NOT READY');
+      return Future.value(false);
+    }
+  }
+
+  Future<bool> _createFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+      if (result == null) {
+        print("HOME HEADER WIDGET :::: ERROR: empty result");
+        return Future.value(false);
+      } else {
+        pickedFile = result.files.single;
+        return Future.value(true);
+      }
+    } catch (e) {
+      print("HOME HEADER WIDGET :::: exception: $e");
+      return Future.value(false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -78,17 +146,33 @@ class _HomeHeaderState extends State<HomeHeader> {
                       color: primaryColor,
                       padding: const EdgeInsets.all(5),
                       child: IconButton(
-                        color: secondaryColor,
-                        iconSize: 80,
-                        icon: Image.asset('resources/icons/enviar.png',
-                            color: secondaryColor),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SelectionWidget()));
-                        },
-                      ),
+                          color: secondaryColor,
+                          iconSize: 80,
+                          icon: Image.asset('resources/icons/enviar.png',
+                              color: secondaryColor),
+                          onPressed: () async {
+                            final requirementsChecked =
+                                await checkAllRequirements();
+                            if (!context.mounted) return;
+                            if (requirementsChecked) {
+                              final fileSelected = await _createFile();
+                              if (!context.mounted) return;
+                              if (fileSelected) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectionWidget()));
+                              } else {
+                                //TODO: error
+                                print(
+                                    "HOME HEADER :::: Error de selección de archivo.");
+                              }
+                            } else {
+                              //TODO: AlertDialog para ir a Configuration
+                              print("HOME HEADER :::: Faltan requerimientos");
+                            }
+                          }),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -122,17 +206,24 @@ class _HomeHeaderState extends State<HomeHeader> {
                       color: secondaryColor,
                       padding: const EdgeInsets.all(5),
                       child: IconButton(
-                        color: primaryColor,
-                        iconSize: 80,
-                        icon: Image.asset('resources/icons/recibir.png',
-                            color: primaryColor),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReceivingWidget()));
-                        },
-                      ),
+                          color: primaryColor,
+                          iconSize: 80,
+                          icon: Image.asset('resources/icons/recibir.png',
+                              color: primaryColor),
+                          onPressed: () async {
+                            final requirementsChecked =
+                                await checkAllRequirements();
+                            if (!context.mounted) return;
+                            if (requirementsChecked) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReceivingWidget()));
+                            } else {
+                              //TODO: AlertDialog para ir a Configuration
+                              print("HOME HEADER :::: Faltan requerimientos");
+                            }
+                          }),
                     ),
                   ),
                   const SizedBox(width: 30),
