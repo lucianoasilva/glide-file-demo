@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/home_widget.dart';
+import 'package:get/get.dart';
+
+import '../controller/requirement_state_controller.dart';
+import '../view/home_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +13,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(RequirementStateController());
+
     return MaterialApp(
         title: 'Glide-File Demo',
         debugShowCheckedModeBanner: false,

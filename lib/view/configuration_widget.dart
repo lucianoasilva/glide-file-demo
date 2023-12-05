@@ -1,25 +1,140 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_beacon/flutter_beacon.dart';
+import 'package:get/get.dart';
+
+import '../controller/requirement_state_controller.dart';
 import '../data/stored_data.dart';
 import '../view/calibration_widget.dart';
 import '../styles/colors.dart';
 
 class ConfigurationWidget extends StatefulWidget {
-  const ConfigurationWidget({super.key, required this.storedData});
+  const ConfigurationWidget(
+      {super.key,
+      required this.storedData,
+      required this.calibrationSwitch,
+      required this.notificationSwitch,
+      required this.allowableRange,
+      required this.configurationCallback});
 
   final StoredData storedData;
+  final bool calibrationSwitch;
+  final bool notificationSwitch;
+  final double allowableRange;
+  final Function(bool, bool, double) configurationCallback;
 
   @override
   State<ConfigurationWidget> createState() => _ConfigurationWidgetState();
 }
 
 class _ConfigurationWidgetState extends State<ConfigurationWidget> {
+  final controller = Get.find<RequirementStateController>();
+  StreamSubscription<BluetoothState>? _streamBluetooth;
+
   bool bluetoothSwitch = false;
   bool locationSwitch = false;
   bool notificationSwitch = true;
   bool calibrationSwitch = true;
 
   double allowableRange = 20.0;
+
+  @override
+  void initState() {
+    super.initState();
+    allowableRange = widget.allowableRange;
+    _updateAllSwitches();
+  }
+
+  _updateAllSwitches() async {
+    await _updateBluetoothSwitch();
+    await _updateLocationSwitch();
+    setState(() {
+      calibrationSwitch = widget.calibrationSwitch;
+      notificationSwitch = widget.notificationSwitch;
+    });
+  }
+
+  _updateBluetoothSwitch() async {
+    await _listeningBluetoothState();
+    final state = controller.bluetoothState.value;
+    setState(() {
+      if (state == BluetoothState.stateOn) {
+        bluetoothSwitch = true;
+      } else {
+        bluetoothSwitch = false;
+      }
+    });
+  }
+
+  _updateLocationSwitch() async {
+    await _listeningLocationState();
+    setState(() {
+      locationSwitch = controller.locationServiceEnabled;
+    });
+  }
+
+  _listeningBluetoothState() async {
+    print('CONFIGURATION WIDGET :::: Listening to bluetooth state');
+    _streamBluetooth = flutterBeacon
+        .bluetoothStateChanged()
+        .listen((BluetoothState state) async {
+      controller.updateBluetoothState(state);
+    });
+    await flutterBeacon.requestAuthorization;
+  }
+
+  _listeningLocationState() async {
+    final locationServiceEnabled =
+        await flutterBeacon.checkLocationServicesIfEnabled;
+    controller.updateLocationService(locationServiceEnabled);
+  }
+
+  _handleBluetooth(value) async {
+    if (Platform.isAndroid) {
+      try {
+        await flutterBeacon.openBluetoothSettings;
+      } on PlatformException catch (e) {
+        print("CONFIGURATION WIDGET :::: exception: $e");
+      } finally {
+        await _updateBluetoothSwitch();
+      }
+    } else if (Platform.isIOS) {
+      //TODO: showDialog title: 'Bluetooth is Off' content: ''Please enable Bluetooth on Settings > Bluetooth.'
+    }
+  }
+
+  _handleOpenLocationSettings() async {
+    if (Platform.isAndroid) {
+      await flutterBeacon.openLocationSettings;
+      await _updateLocationSwitch();
+    } else if (Platform.isIOS) {
+      //TODO: showDialog title: 'Location Service Off' content: 'Please enable Location Services on Settings > Privacy > Location Services.'
+    }
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      if (_streamBluetooth != null) {
+        if (_streamBluetooth!.isPaused) {
+          _streamBluetooth?.resume();
+        }
+      }
+      _updateAllSwitches();
+    } else if (state == AppLifecycleState.paused) {
+      _streamBluetooth?.pause();
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamBluetooth?.cancel();
+    widget.configurationCallback(
+        calibrationSwitch, notificationSwitch, allowableRange);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +197,8 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                     ),
                     Switch(
                       value: bluetoothSwitch,
-                      onChanged: (value) {
-                        setState(() {
-                          bluetoothSwitch = value;
-                        });
+                      onChanged: (value) async {
+                        _handleBluetooth(value);
                       },
                       activeColor: primaryColor,
                       inactiveTrackColor: dividerColor,
@@ -119,10 +232,8 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
                     ),
                     Switch(
                       value: locationSwitch,
-                      onChanged: (value) {
-                        setState(() {
-                          locationSwitch = value;
-                        });
+                      onChanged: (value) async {
+                        _handleOpenLocationSettings();
                       },
                       activeColor: primaryColor,
                       inactiveTrackColor: dividerColor,
