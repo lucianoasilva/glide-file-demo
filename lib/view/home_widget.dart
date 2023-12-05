@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import '../controller/calibration_controller.dart';
 import '../data/stored_data.dart';
 import '../view/configuration_widget.dart';
 import '../styles/colors.dart';
@@ -84,7 +85,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadCalibration() async {}
+  Future<void> _loadCalibration() async {
+    try {
+      final calibration = await CalibrationController.loadCalibration();
+      if(calibration != null) {
+        storedData.blueberryPosition[0] = calibration.blueberryPositionX;
+        storedData.blueberryPosition[1] = calibration.blueberryPositionY;
+        storedData.icePosition[0] = calibration.icePositionX;
+        storedData.icePosition[1] = calibration.icePositionY;
+        storedData.mintPosition[0] = calibration.mintPositionX;
+        storedData.mintPosition[1] = calibration.mintPositionY;
+      } else {
+        print("HOME WIDGET :::: archivo de calibración no existe");
+      }
+    } catch(e) {
+      print("HOME WIDGET :::: excepción: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
