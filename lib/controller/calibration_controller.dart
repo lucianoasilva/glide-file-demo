@@ -4,7 +4,7 @@ import 'dart:io';
 import '../data/calibration.dart';
 
 class CalibrationController {
-  static String defaultPath = '/storage/emulated/0/Documents/glide-file';
+  static String defaultPath = '/storage/emulated/0/Documents/glide-file-demo';
 
   static Future<void> saveCalibration(Calibration calibration) async {
     try {
