@@ -29,6 +29,17 @@ class _CalibrationWidgetState extends State<CalibrationWidget> {
     _updateTextFieldValues();
   }
 
+  @override
+  void dispose() {
+    controllerBPosX.dispose();
+    controllerBPosY.dispose();
+    controllerIPosX.dispose();
+    controllerIPosY.dispose();
+    controllerMPosX.dispose();
+    controllerMPosY.dispose();
+    super.dispose();
+  }
+
   _updateTextFieldValues() {
     setState(() {
       controllerBPosX.text = widget.storedData.blueberryPosition[0].toString();
