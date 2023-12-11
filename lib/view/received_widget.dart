@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 
 import '../styles/colors.dart';
 
 class ReceivedWidget extends StatefulWidget {
-  const ReceivedWidget({super.key});
+  const ReceivedWidget({super.key, required this.filePath});
 
   @override
   State<ReceivedWidget> createState() => _ReceivedWidgetState();
+
+  final String filePath;
 }
 
 class _ReceivedWidgetState extends State<ReceivedWidget> {
@@ -48,9 +53,25 @@ class _ReceivedWidgetState extends State<ReceivedWidget> {
                   elevation: 0,
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
-                        Radius.circular(25),
-                      ))),
-              onPressed: () {},
+                    Radius.circular(25),
+                  ))),
+              onPressed: () async {
+                try {
+                  bool exists = await File(widget.filePath).exists();
+                  if (exists) {
+                    final result = await OpenFile.open(widget.filePath);
+                    setState(() {
+                      var openResult =
+                          "type=${result.type} message=${result.message}";
+                      print("RECEIVED WIDGET :::: openResult = $openResult");
+                    });
+                  } else {
+                    print("RECEIVED WIDGET :::: No existe el archivo.");
+                  }
+                } catch (e) {
+                  print("RECEIVED WIDGET :::: excepción: $e");
+                }
+              },
               child: const Text(
                 "Abrir archivo",
                 style: TextStyle(

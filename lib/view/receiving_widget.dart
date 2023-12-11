@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +21,8 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
   double progress = 0.0;
 
   static String defaultPath = '/storage/emulated/0/Documents/glide-file-demo';
+
+  String filePath = '';
 
   @override
   void initState() {
@@ -46,7 +47,8 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
           if (!context.mounted) return;
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const ReceivedWidget()),
+            MaterialPageRoute(
+                builder: (context) => ReceivedWidget(filePath: filePath)),
           );
         });
       }
@@ -66,7 +68,7 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
         print("RECEIVING WIDGET :::: Directorio creado : $defaultPath");
       }
 
-      String filePath = '$defaultPath/exampleImage.jpg';
+      filePath = '$defaultPath/exampleImage.jpg';
       File receivedFileExample = File(filePath);
 
       if (await receivedFileExample.exists()) {
