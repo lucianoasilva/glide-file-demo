@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/received_widget.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+import '../view/received_widget.dart';
 import '../styles/colors.dart';
 
 class ReceivingWidget extends StatefulWidget {
@@ -13,10 +17,11 @@ class ReceivingWidget extends StatefulWidget {
 }
 
 class _ReceivingWidgetState extends State<ReceivingWidget> {
-
   bool receiving = false;
 
   double progress = 0.0;
+
+  static String defaultPath = '/storage/emulated/0/Documents/glide-file-demo';
 
   @override
   void initState() {
@@ -29,7 +34,8 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
     });
   }
 
-  void _startLoading() {
+  void _startLoading() async {
+    await _saveFileExample();
     Timer.periodic(const Duration(milliseconds: 20), (timer) {
       setState(() {
         progress += 0.01;
@@ -45,6 +51,38 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
         });
       }
     });
+  }
+
+  _saveFileExample() async {
+    try {
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+      Directory defaultDirectory = Directory(defaultPath);
+      if (!(await defaultDirectory.exists())) {
+        Directory newFolder = await defaultDirectory.create(recursive: true);
+        defaultPath = newFolder.path;
+        print("RECEIVING WIDGET :::: Directorio creado : $defaultPath");
+      }
+
+      String filePath = '$defaultPath/exampleImage.jpg';
+      File receivedFileExample = File(filePath);
+
+      if (await receivedFileExample.exists()) {
+        print(
+            "RECEIVING WIDGET :::: Imagen de ejemplo ya existe en el almacenamiento");
+      } else {
+        ByteData data =
+            await rootBundle.load('resources/images/exampleImage.jpg');
+        List<int> bytes = data.buffer.asUint8List();
+
+        await receivedFileExample.writeAsBytes(bytes);
+        print("RECEIVING WIDGET :::: Imagen de ejemplo guardada");
+      }
+    } catch (e) {
+      print("RECEIVING WIDGET :::: $e");
+    }
   }
 
   @override
@@ -83,14 +121,14 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
                   Center(
                       child: (receiving)
                           ? Text(
-                        '${(progress * 100).toStringAsFixed(0)}%',
-                        style: const TextStyle(
-                          fontFamily: 'Mukta',
-                          fontWeight: FontWeight.bold,
-                          color: fontColor1,
-                          fontSize: 30,
-                        ),
-                      )
+                              '${(progress * 100).toStringAsFixed(0)}%',
+                              style: const TextStyle(
+                                fontFamily: 'Mukta',
+                                fontWeight: FontWeight.bold,
+                                color: fontColor1,
+                                fontSize: 30,
+                              ),
+                            )
                           : null),
                 ]),
               ),

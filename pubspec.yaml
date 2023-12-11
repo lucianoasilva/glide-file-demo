@@ -42,4 +42,5 @@ flutter:
 
   assets:
     - resources/icons/
+    - resources/images/exampleImage.jpg
     - resources/assets/splash.riv

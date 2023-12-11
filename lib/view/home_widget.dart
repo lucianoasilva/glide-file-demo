@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
         print("HOME WIDGET :::: no se garantizó el permiso de almacenamiento.");
       }
     }
+    //TODO: emitir alerta si no se ha garantizado el permiso, para hacerlo manualmente
   }
 
   Future<void> _loadCalibration() async {
