@@ -65,8 +65,21 @@ void showErrorDialog(BuildContext context, String title, String message) {
   showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-            title: Text(title),
-            content: Text(message),
+            backgroundColor: tertiaryColor,
+            title: Text(title,
+                style: const TextStyle(
+                  fontFamily: 'Mukta',
+                  color: fontColor1,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                )),
+            content: Text(message,
+                style: const TextStyle(
+                  fontFamily: 'Mukta',
+                  color: fontColor1,
+                  fontWeight: FontWeight.w100,
+                  fontSize: 16,
+                )),
             actions: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
