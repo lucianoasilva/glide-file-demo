@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../styles/colors.dart';
+
 void showErrorToast(BuildContext context, String errorMessage) {
   FToast fToast = FToast();
   fToast.init(context);
@@ -66,9 +68,25 @@ void showErrorDialog(BuildContext context, String title, String message) {
             title: Text(title),
             content: Text(message),
             actions: [
-              TextButton(
-                child: const Text("Cerrar"),
-                onPressed: () {
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(80, 40),
+                    backgroundColor: primaryColor,
+                    elevation: 0,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ))),
+                child: const Text(
+                  "Cerrar",
+                  style: TextStyle(
+                    fontFamily: 'Mukta',
+                    color: fontColor1,
+                    fontWeight: FontWeight.w100,
+                    fontSize: 18,
+                  ),
+                ),
+                onPressed: () async {
                   Navigator.of(context).pop();
                 },
               ),
@@ -77,9 +95,46 @@ void showErrorDialog(BuildContext context, String title, String message) {
 }
 
 void showAlertDialog(BuildContext context, String title, String message,
-    String content, List<Widget>? actions) {
+    Function()? onPressed, String buttonText) {
   showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-          title: Text(title), content: Text(content), actions: actions));
+            backgroundColor: tertiaryColor,
+            title: Text(title,
+                style: const TextStyle(
+                  fontFamily: 'Mukta',
+                  color: fontColor1,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                )),
+            content: Text(message,
+                style: const TextStyle(
+                  fontFamily: 'Mukta',
+                  color: fontColor1,
+                  fontWeight: FontWeight.w100,
+                  fontSize: 16,
+                )),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(80, 40),
+                    backgroundColor: primaryColor,
+                    elevation: 0,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ))),
+                onPressed: onPressed,
+                child: Text(
+                  buttonText,
+                  style: const TextStyle(
+                    fontFamily: 'Mukta',
+                    color: fontColor1,
+                    fontWeight: FontWeight.w100,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ));
 }
