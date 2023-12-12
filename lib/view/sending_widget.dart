@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/sent_widget.dart';
 
+import '../view/sent_widget.dart';
 import '../styles/colors.dart';
 
 class SendingWidget extends StatefulWidget {

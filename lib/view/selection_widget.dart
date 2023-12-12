@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glide_file_demo/view/sending_widget.dart';
 
+import '../view/sending_widget.dart';
+import '../alerts/alerts.dart';
 import '../styles/colors.dart';
 
 class SelectionWidget extends StatefulWidget {
@@ -107,10 +108,11 @@ class _SelectionWidgetState extends State<SelectionWidget> {
             startVerticalDragDetails != null) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => SendingWidget()),
+            MaterialPageRoute(builder: (context) => const SendingWidget()),
           );
         } else {
           print("SELECTION WIDGET :::: update/start vertical null");
+          showErrorToast(context, "Error de deslizamiento vertical");
         }
       },
       onHorizontalDragStart: (dragDetails) {
@@ -124,10 +126,11 @@ class _SelectionWidgetState extends State<SelectionWidget> {
             startHorizontalDragDetails != null) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => SendingWidget()),
+            MaterialPageRoute(builder: (context) => const SendingWidget()),
           );
         } else {
           print("SELECTION WIDGET :::: update/start horizontal null");
+          showErrorToast(context, "Error de deslizamiento horizontal.");
         }
       },
     );

@@ -5,13 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:get/get.dart';
 
+import '../data/stored_data.dart';
+import '../alerts/alerts.dart';
 import '../controller/requirement_state_controller.dart';
+import '../view/configuration_widget.dart';
 import '../view/receiving_widget.dart';
 import '../view/selection_widget.dart';
 import '../styles/colors.dart';
 
 class HomeHeader extends StatefulWidget {
-  const HomeHeader({super.key});
+  const HomeHeader(
+      {super.key,
+      required this.storedData,
+      required this.calibrationSwitch,
+      required this.notificationSwitch,
+      required this.allowableRange,
+      required this.configurationCallback});
+
+  final StoredData storedData;
+  final bool calibrationSwitch;
+  final bool notificationSwitch;
+  final double allowableRange;
+
+  final Function(bool, bool, double) configurationCallback;
 
   @override
   State<HomeHeader> createState() => _HomeHeaderState();
@@ -69,6 +85,8 @@ class _HomeHeaderState extends State<HomeHeader> {
       final result = await FilePicker.platform.pickFiles(allowMultiple: true);
       if (result == null) {
         print("HOME HEADER WIDGET :::: ERROR: empty result");
+        if (!context.mounted) return Future.value(false);
+        showErrorToast(context, "Error de selección de archivo.");
         return Future.value(false);
       } else {
         pickedFile = result.files.single;
@@ -76,6 +94,7 @@ class _HomeHeaderState extends State<HomeHeader> {
       }
     } catch (e) {
       print("HOME HEADER WIDGET :::: exception: $e");
+      showErrorToastException(context, "HomeHeader (selección de archivo)", e);
       return Future.value(false);
     }
   }
@@ -162,15 +181,37 @@ class _HomeHeaderState extends State<HomeHeader> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            SelectionWidget()));
+                                            const SelectionWidget()));
                               } else {
-                                //TODO: error
                                 print(
                                     "HOME HEADER :::: Error de selección de archivo.");
+                                showErrorToast(context,
+                                    "No se pudo seleccionar el archivo.");
                               }
                             } else {
-                              //TODO: AlertDialog para ir a Configuration
                               print("HOME HEADER :::: Faltan requerimientos");
+                              showAlertDialog(context, 'Faltan requerimientos',
+                                  'Se deben habilitar todos los requerimientos para el mapeo del dispositivo.',
+                                  () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ConfigurationWidget(
+                                          storedData: widget.storedData,
+                                          calibrationSwitch:
+                                              widget.calibrationSwitch,
+                                          notificationSwitch:
+                                              widget.notificationSwitch,
+                                          allowableRange: widget.allowableRange,
+                                          configurationCallback: (calSwitch,
+                                              notSwitch, tolerance) {
+                                            widget.configurationCallback(
+                                                calSwitch,
+                                                notSwitch,
+                                                tolerance);
+                                          })),
+                                );
+                              }, 'Abrir configuración');
                             }
                           }),
                     ),
@@ -220,8 +261,29 @@ class _HomeHeaderState extends State<HomeHeader> {
                                   MaterialPageRoute(
                                       builder: (context) => ReceivingWidget()));
                             } else {
-                              //TODO: AlertDialog para ir a Configuration
                               print("HOME HEADER :::: Faltan requerimientos");
+                              showAlertDialog(context, 'Faltan requerimientos',
+                                  'Se deben habilitar todos los requerimientos para el mapeo del dispositivo.',
+                                  () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ConfigurationWidget(
+                                          storedData: widget.storedData,
+                                          calibrationSwitch:
+                                              widget.calibrationSwitch,
+                                          notificationSwitch:
+                                              widget.notificationSwitch,
+                                          allowableRange: widget.allowableRange,
+                                          configurationCallback: (calSwitch,
+                                              notSwitch, tolerance) {
+                                            widget.configurationCallback(
+                                                calSwitch,
+                                                notSwitch,
+                                                tolerance);
+                                          })),
+                                );
+                              }, 'Abrir configuración');
                             }
                           }),
                     ),

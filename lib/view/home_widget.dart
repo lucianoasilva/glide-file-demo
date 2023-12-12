@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import '../alerts/alerts.dart';
 import '../controller/calibration_controller.dart';
 import '../data/stored_data.dart';
 import '../view/configuration_widget.dart';
@@ -71,25 +72,33 @@ class _HomePageState extends State<HomePage> {
       if (!videos) {
         print(
             "HOME WIDGET :::: no se garantizó el permiso de lectura de videos.");
+        if (!context.mounted) return;
+        showErrorToast(context,
+            "Lectura de videos no permitido. Intenta habilitarlo manualmente.");
       }
       bool photos = await Permission.photos.status.isGranted;
       if (!photos) {
         print(
             "HOME WIDGET :::: no se garantizó el permiso de lectura de fotos.");
+        if (!context.mounted) return;
+        showErrorToast(context,
+            "Lectura de fotos no permitido. Intenta habilitarlo manualmente.");
       }
     } else {
       bool storage = await Permission.storage.status.isGranted;
       if (!storage) {
         print("HOME WIDGET :::: no se garantizó el permiso de almacenamiento.");
+        if (!context.mounted) return;
+        showErrorToast(context,
+            "No tenés permisos de almacenamiento. Intenta habilitarlo manualmente.");
       }
     }
-    //TODO: emitir alerta si no se ha garantizado el permiso, para hacerlo manualmente
   }
 
   Future<void> _loadCalibration() async {
     try {
       final calibration = await CalibrationController.loadCalibration();
-      if(calibration != null) {
+      if (calibration != null) {
         storedData.blueberryPosition[0] = calibration.blueberryPositionX;
         storedData.blueberryPosition[1] = calibration.blueberryPositionY;
         storedData.icePosition[0] = calibration.icePositionX;
@@ -98,9 +107,14 @@ class _HomePageState extends State<HomePage> {
         storedData.mintPosition[1] = calibration.mintPositionY;
       } else {
         print("HOME WIDGET :::: archivo de calibración no existe");
+        if (!context.mounted) return;
+        showErrorToast(
+            context, "Configuración anterior de beacons no disponible.");
       }
-    } catch(e) {
+    } catch (e) {
       print("HOME WIDGET :::: excepción: $e");
+      if (!context.mounted) return;
+      showErrorToastException(context, 'Home (carga de calibración)', e);
     }
   }
 
@@ -143,6 +157,18 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        body: HomeHeader());
+        body: HomeHeader(
+          storedData: storedData,
+          calibrationSwitch: calibrationSwitch,
+          notificationSwitch: notificationSwitch,
+          allowableRange: allowableRange,
+          configurationCallback: (calSwitch, notSwitch, tolerance) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                  calibrationSwitch = calSwitch;
+                  notificationSwitch = notSwitch;
+                  allowableRange = tolerance;
+                }));
+          },
+        ));
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:get/get.dart';
 
+import '../alerts/alerts.dart';
 import '../controller/requirement_state_controller.dart';
 import '../data/stored_data.dart';
 import '../view/calibration_widget.dart';
@@ -98,11 +99,13 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
         await flutterBeacon.openBluetoothSettings;
       } on PlatformException catch (e) {
         print("CONFIGURATION WIDGET :::: exception: $e");
+        showErrorToastException(context, "Configuration (Bluetooth)", e);
       } finally {
         await _updateBluetoothSwitch();
       }
     } else if (Platform.isIOS) {
-      //TODO: showDialog title: 'Bluetooth is Off' content: ''Please enable Bluetooth on Settings > Bluetooth.'
+      showErrorDialog(context, 'Bluetooth desactivado',
+          'Activa Bluetooth en Ajustes > Bluetooth');
     }
   }
 
@@ -111,7 +114,8 @@ class _ConfigurationWidgetState extends State<ConfigurationWidget> {
       await flutterBeacon.openLocationSettings;
       await _updateLocationSwitch();
     } else if (Platform.isIOS) {
-      //TODO: showDialog title: 'Location Service Off' content: 'Please enable Location Services on Settings > Privacy > Location Services.'
+      showErrorDialog(context, 'Servicio de localización desactivado',
+          'Activalo en Ajustes > Privacidad > Servicio de localización');
     }
   }
 

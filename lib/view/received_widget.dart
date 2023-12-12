@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 
+import '../alerts/alerts.dart';
 import '../styles/colors.dart';
 
 class ReceivedWidget extends StatefulWidget {
@@ -67,9 +68,13 @@ class _ReceivedWidgetState extends State<ReceivedWidget> {
                     });
                   } else {
                     print("RECEIVED WIDGET :::: No existe el archivo.");
+                    if (!context.mounted) return;
+                    showErrorToast(context, "El archivo no existe.");
                   }
                 } catch (e) {
                   print("RECEIVED WIDGET :::: excepción: $e");
+                  showErrorToastException(
+                      context, "Received (abrir archivo)", e);
                 }
               },
               child: const Text(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../alerts/alerts.dart';
 import '../view/received_widget.dart';
 import '../styles/colors.dart';
 
@@ -84,6 +85,8 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
       }
     } catch (e) {
       print("RECEIVING WIDGET :::: $e");
+      showErrorToastException(
+          context, "Receiving (guardar archivo ejemplo)", e);
     }
   }
 
