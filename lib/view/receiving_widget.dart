@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../services/notification_services.dart';
 import '../alerts/alerts.dart';
 import '../view/received_widget.dart';
 import '../styles/colors.dart';
 
 class ReceivingWidget extends StatefulWidget {
-  const ReceivingWidget({super.key});
+  const ReceivingWidget({super.key, required this.notificationSwitch});
+
+  final bool notificationSwitch;
 
   @override
   State<ReceivingWidget> createState() => _ReceivingWidgetState();
@@ -28,6 +31,9 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
   @override
   void initState() {
     super.initState();
+    if (widget.notificationSwitch) {
+      showRNotification(1);
+    }
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         receiving = true;
@@ -37,6 +43,9 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
   }
 
   void _startLoading() async {
+    if (widget.notificationSwitch) {
+      showRNotification(2);
+    }
     await _saveFileExample();
     Timer.periodic(const Duration(milliseconds: 20), (timer) {
       setState(() {
@@ -44,6 +53,7 @@ class _ReceivingWidgetState extends State<ReceivingWidget> {
       });
       if (progress >= 1.0) {
         timer.cancel();
+        showRNotification(3);
         setState(() {
           if (!context.mounted) return;
           Navigator.pushReplacement(

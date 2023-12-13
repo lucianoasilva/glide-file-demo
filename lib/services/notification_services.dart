@@ -1,25 +1,25 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> initNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('notification_icon');
+      AndroidInitializationSettings('notification_icon');
 
   const InitializationSettings initializationSettings =
-  InitializationSettings(android: initializationSettingsAndroid);
+      InitializationSettings(android: initializationSettingsAndroid);
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
 Future<void> showRNotification(int id) async {
   const AndroidNotificationDetails androidNotificationDetails =
-  AndroidNotificationDetails('01', 'Recepción de archivo',
-      importance: Importance.max, priority: Priority.high);
+      AndroidNotificationDetails('01', 'Recepción de archivo',
+          importance: Importance.max, priority: Priority.high);
 
   const NotificationDetails notificationDetails =
-  NotificationDetails(android: androidNotificationDetails);
+      NotificationDetails(android: androidNotificationDetails);
 
   switch (id) {
     case 1:

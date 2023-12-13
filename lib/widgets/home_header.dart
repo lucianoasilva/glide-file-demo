@@ -259,7 +259,9 @@ class _HomeHeaderState extends State<HomeHeader> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ReceivingWidget()));
+                                      builder: (context) => ReceivingWidget(
+                                          notificationSwitch:
+                                              widget.notificationSwitch)));
                             } else {
                               print("HOME HEADER :::: Faltan requerimientos");
                               showAlertDialog(context, 'Faltan requerimientos',
