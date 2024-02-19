@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
+import 'package:flutter/services.dart';
 
 import '../styles/colors.dart';
 import '../services/notification_services.dart';
@@ -10,6 +11,8 @@ import '../view/home_widget.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initNotifications();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(const MyApp()));
   runApp(const MyApp());
 }
 
