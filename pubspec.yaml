@@ -20,6 +20,7 @@ dependencies:
   fluttertoast: ^8.2.4
   flutter_local_notifications: ^16.2.0
   rive_splash_screen: ^0.1.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -40,19 +41,19 @@ flutter:
   fonts:
     - family: Mukta
       fonts:
-        - asset: resources/assets/fonts/Mukta-Bold.ttf
-        - asset: resources/assets/fonts/Mukta-ExtraBold.ttf
-        - asset: resources/assets/fonts/Mukta-Light.ttf
-        - asset: resources/assets/fonts/Mukta-Medium.ttf
-        - asset: resources/assets/fonts/Mukta-Regular.ttf
+        - asset: lib/app/resources/fonts/Mukta-Bold.ttf
+        - asset: lib/app/resources/fonts/Mukta-ExtraBold.ttf
+        - asset: lib/app/resources/fonts/Mukta-Light.ttf
+        - asset: lib/app/resources/fonts/Mukta-Medium.ttf
+        - asset: lib/app/resources/fonts/Mukta-Regular.ttf
     - family: LobsterTwo
       fonts:
-        - asset: resources/assets/fonts/LobsterTwo-Bold.ttf
-        - asset: resources/assets/fonts/LobsterTwo-BoldItalic.ttf
-        - asset: resources/assets/fonts/LobsterTwo-Italic.ttf
-        - asset: resources/assets/fonts/LobsterTwo-Regular.ttf
+        - asset: lib/app/resources/fonts/LobsterTwo-Bold.ttf
+        - asset: lib/app/resources/fonts/LobsterTwo-BoldItalic.ttf
+        - asset: lib/app/resources/fonts/LobsterTwo-Italic.ttf
+        - asset: lib/app/resources/fonts/LobsterTwo-Regular.ttf
 
   assets:
-    - resources/icons/
-    - resources/images/exampleImage.jpg
-    - resources/assets/splash.riv
+    - lib/app/resources/icons/
+    - lib/app/resources/images/exampleImage.jpg
+    - lib/app/resources/splash/splash.riv
