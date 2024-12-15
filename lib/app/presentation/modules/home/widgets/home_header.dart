@@ -159,7 +159,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                     iconButton: IconButton(
                       color: secondaryColor,
                       iconSize: 80,
-                      icon: Image.asset('resources/icons/enviar.png',
+                      icon: Image.asset('lib/app/resources/icons/enviar.png',
                           color: secondaryColor),
                       onPressed: () => _sendButton(context),
                     ),
@@ -182,7 +182,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       iconButton: IconButton(
                         color: primaryColor,
                         iconSize: 80,
-                        icon: Image.asset('resources/icons/recibir.png',
+                        icon: Image.asset('lib/app/resources/icons/recibir.png',
                             color: primaryColor),
                         onPressed: () => _receiveButton(
                           context,

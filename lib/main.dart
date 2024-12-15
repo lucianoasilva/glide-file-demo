@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:glide_file_demo/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,11 @@ import 'app/presentation/modules/home/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initNotifications();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(const MyApp()));
   runApp(const MyApp());
@@ -36,7 +43,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: SplashScreen.navigate(
-          name: 'resources/assets/splash.riv',
+          name: 'lib/app/resources/splash/splash.riv',
           next: (context) => const HomeScreen(),
           until: () => Future.delayed(const Duration(seconds: 3)),
           startAnimation: 'Splash',

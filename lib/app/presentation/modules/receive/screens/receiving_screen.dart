@@ -92,7 +92,7 @@ class _ReceivingScreenState extends State<ReceivingScreen> {
             "RECEIVING SCREEN :::: Imagen de ejemplo ya existe en el almacenamiento");
       } else {
         ByteData data =
-            await rootBundle.load('resources/images/exampleImage.jpg');
+            await rootBundle.load('lib/app/resources/images/exampleImage.jpg');
         List<int> bytes = data.buffer.asUint8List();
 
         await receivedFileExample.writeAsBytes(bytes);
