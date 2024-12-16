@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677249099521",
+    "project_id": "glide-file-demo",
+    "storage_bucket": "glide-file-demo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677249099521:android:b89111802d13fe3ba01d00",
+        "android_client_info": {
+          "package_name": "com.example.glide_file_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNfsqQ6ssLbgoGjhH3O4inyFgVycMGAd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

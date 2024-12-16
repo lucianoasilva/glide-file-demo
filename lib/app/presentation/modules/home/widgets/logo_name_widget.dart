@@ -14,7 +14,7 @@ class LogoNameWidget extends StatelessWidget {
         SizedBox(
           height: 170,
           child: Image.asset(
-            'resources/icons/glide-file_logo.png',
+            'lib/app/resources/icons/glide-file_logo.png',
             color: primaryColor,
           ),
         ),
