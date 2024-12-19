@@ -1,12 +1,18 @@
-name: CI/CD Deploy to Firebase
+name: "Build and release development"
 
 on:
-  pull_request:
-    branches: [ develop ]
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: write
 
 jobs:
-  build-deploy:
+  build:
+    name: Build and release development
     runs-on: ubuntu-latest
+    environment: development
 
     env:
       FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
@@ -38,6 +44,12 @@ jobs:
 
       - name: Build APK
         run: flutter build apk --release
+
+      - name: Extract version from pubspec.yaml
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV  
 
       - name: Upload APK to Firebase App Distribution
         run: |
